@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+        "noEmit": true
+    },
+    "extends": "@uk/config/tsconfig",
+    "includes": ["./**/*.ts"]
+}

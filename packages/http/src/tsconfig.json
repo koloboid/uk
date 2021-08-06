@@ -1,0 +1,7 @@
+{
+    "compilerOptions": {
+        "outDir": "../dist"
+    },
+    "extends": "@uk/config/tsconfig/uk",
+    "includes": ["./**/*.ts"]
+}

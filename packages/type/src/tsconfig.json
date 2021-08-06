@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "importHelpers": true,
+        "outDir": "../dist"
+    },
+    "extends": "@uk/config/uk/tsconfig",
+    "includes": ["./**/*.ts"]
+}

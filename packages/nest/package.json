@@ -1,0 +1,26 @@
+{
+    "name": "@uk/nest",
+    "version": "0.1.0",
+    "main": "dist/index",
+    "types": "dist/index.d.ts",
+    "author": "koloboid",
+    "license": "MIT",
+    "files": [
+        "dist/**/*"
+    ],
+    "devDependencies": {
+        "@typescript-eslint/parser": "^4.29.0",
+        "eslint": "^7.32.0",
+        "jest": "^27.0.6",
+        "npm-check-updates": "^11.8.3",
+        "ts-jest": "^27.0.4",
+        "typescript": "^4.3.5"
+    },
+    "dependencies": {
+        "class-validator": "^0.13.1"
+    },
+    "browser": {
+        "@nestjs/graphql": false,
+        "@nestjs/common": false
+    }
+}

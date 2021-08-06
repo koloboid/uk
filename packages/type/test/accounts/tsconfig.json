@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "noEmit": true,
+        "newLine": "crlf"
+    },
+    "extends": "@uk/config/tsconfig/uk",
+    "includes": ["./**/*.ts"]
+}

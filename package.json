@@ -1,0 +1,18 @@
+{
+    "name": "uk",
+    "packageManager": "yarn@3.0.0",
+    "private": true,
+    "scripts": {
+        "build": "./scripts/foreach.sh build",
+        "lint": "./scripts/foreach.sh lint",
+        "test": "./scripts/foreach.sh test",
+        "ncu": "./scripts/foreach.sh ncu"
+    },
+    "workspaces": [
+        "packages/*"
+    ],
+    "devDependencies": {
+        "jest": "^27.0.6",
+        "npm-check-updates": "^11.8.3"
+    }
+}

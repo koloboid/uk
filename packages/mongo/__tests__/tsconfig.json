@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "importHelpers": false,
+        "noEmit": true
+    },
+    "extends": "@uk/config/tsconfig/uk",
+    "includes": ["./**/*.ts"]
+}
