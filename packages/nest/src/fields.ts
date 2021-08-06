@@ -20,8 +20,8 @@ import {
 import { C, L, U } from 'ts-toolbelt';
 import { Args, Float as GQLFloat, ID as GQLID, Int as GQLInt, NestField, registerEnumType } from './shim-graphql';
 
-const SymFieldOpts = Symbol();
-const SymFieldEach = Symbol();
+const SymFieldOpts = '__SymFieldOpts';
+const SymFieldEach = '__SymFieldEach';
 
 export function Enum<K extends string>(...values: K[]): Record<K, K> {
     return global.Object.fromEntries(values.map(val => [val, val])) as any;
@@ -31,7 +31,6 @@ export type Enum<E> = keyof E;
 export type Field<TOpts extends FieldOpts = FieldOpts> = PropertyDecorator & {
     [SymFieldOpts]: TOpts & FieldInternalOpts;
 };
-export type DocId = number;
 
 export function int32<O extends MinMaxFieldOpts>(opts?: O) {
     const { min, max } = typeof opts === 'object' ? opts : ({} as MinMax);
@@ -45,7 +44,7 @@ export function int32<O extends MinMaxFieldOpts>(opts?: O) {
 export const Int32 = int32;
 
 export function int53<O extends MinMaxFieldOpts>(opts?: O) {
-    return uniteDecorators(opts, GQLInt, ...minMax(opts, Min, Max), IsInt());
+    return uniteDecorators(opts, Number, ...minMax(opts, Min, Max), IsInt());
 }
 export const Int53 = int53;
 
@@ -55,7 +54,7 @@ export function float<O extends MinMaxFieldOpts>(opts?: O & IsNumberOptions) {
 export const Float = float;
 
 export function string<O extends MinMaxFieldOpts>(opts?: O) {
-    return uniteDecorators(opts, String, ...minMax(opts, MinLength, MaxLength), IsString());
+    return uniteDecorators(opts, global.String, ...minMax(opts, MinLength, MaxLength), IsString());
 }
 export const String = string;
 
@@ -70,7 +69,7 @@ export function object<O extends FieldOpts>(type: C.Class, opts?: O) {
 export const Object = object;
 export const Obj = object;
 
-export function one<O extends FieldOpts, C extends C.Class<any, { _id: DocId }>>(
+export function one<O extends FieldOpts, C extends C.Class<any, { _id: string | number | object }>>(
     type: C,
     fk: keyof InstanceType<C> = '_id',
     opts?: O,
@@ -79,7 +78,7 @@ export function one<O extends FieldOpts, C extends C.Class<any, { _id: DocId }>>
 }
 export const One = one;
 
-export function many<O extends FieldOpts, C extends C.Class<any, { _id: DocId }>>(
+export function many<O extends FieldOpts, C extends C.Class<any, { _id: string | number | object }>>(
     type: C,
     fk: keyof InstanceType<C> = '_id',
     opts?: O,
@@ -108,7 +107,7 @@ export function date<O extends FieldOpts>(opts?: O & { min?: Date; max?: Date })
         opts && typeof opts === 'object'
             ? [opts.min ? MinDate(opts.min) : undefined, opts.max ? MaxDate(opts.max) : undefined]
             : [];
-    return uniteDecorators(opts, Date, IsDate(), ...minmax);
+    return uniteDecorators(opts, global.Date, IsDate(), ...minmax);
 }
 export const Date = date;
 export const DateTime = date;

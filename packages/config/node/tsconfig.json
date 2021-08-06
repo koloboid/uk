@@ -1,6 +1,4 @@
 {
     "extends": "../cross/tsconfig.json",
-    "compilerOptions": {
-        "suppressImplicitAnyIndexErrors": true
-    }
+    "compilerOptions": {}
 }
