@@ -1,4 +1,18 @@
 {
     "extends": "../cross/tsconfig.json",
-    "compilerOptions": {}
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "commonjs",
+        "lib": ["es2017"],
+        "allowJs": false,
+        "jsx": "react",
+        "noEmit": true,
+        "isolatedModules": true,
+        "resolveJsonModule": true,
+        "strict": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "skipLibCheck": false
+    }
 }
