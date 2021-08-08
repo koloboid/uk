@@ -838,6 +838,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsconfig/react-native@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@tsconfig/react-native@npm:1.0.3"
+  checksum: abc74329cc555ebc0875cc49af01a983595d81482b4da72e2402e0f121ab9bfdae890b80c7512e5b2a385fd496bc2f3aa1735432d0e6656f07ced78ed25a3bc8
+  languageName: node
+  linkType: hard
+
 "@tsconfig/recommended@npm:^1.0.1":
   version: 1.0.1
   resolution: "@tsconfig/recommended@npm:1.0.1"
@@ -1237,6 +1244,7 @@ __metadata:
   resolution: "@uk/config@workspace:packages/config"
   dependencies:
     "@tsconfig/node14": ^1.0.1
+    "@tsconfig/react-native": ^1.0.3
     "@tsconfig/recommended": ^1.0.1
     "@types/node": ^16.4.13
     "@typescript-eslint/eslint-plugin": ^4.29.0

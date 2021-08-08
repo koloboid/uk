@@ -1,6 +1,6 @@
 {
     "name": "@uk/type",
-    "version": "1.0.0",
+    "version": "0.2.1",
     "main": "dist/index",
     "types": "dist/index.d.ts",
     "author": "koloboid",

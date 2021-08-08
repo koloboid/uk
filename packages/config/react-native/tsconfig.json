@@ -1,4 +1,8 @@
 {
-    "extends": "../cross/tsconfig.json",
-    "compilerOptions": {}
+    "extends": "@tsconfig/react-native/tsconfig.json",
+    "compilerOptions": {
+        "resolveJsonModule": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+    }
 }

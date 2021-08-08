@@ -20,7 +20,7 @@
         "class-validator": "^0.13.1"
     },
     "browser": {
-        "@nestjs/graphql": false,
-        "@nestjs/common": false
+        "@nestjs/common": false,
+        "@nestjs/graphql": false
     }
 }
