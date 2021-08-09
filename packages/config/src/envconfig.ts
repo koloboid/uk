@@ -7,7 +7,7 @@ export function envConfig<TEnv, TCustom>(
     customConf?: TCustom,
     dotEnvConf?: dotenv.DotenvConfigOptions,
 ): TEnv & TCustom & { NODE_ENV?: 'production' | 'development'; isDev: boolean; isProd: boolean } {
-    dotenv.config(dotEnvConf);
+    dotenv && dotenv.config && dotenv.config(dotEnvConf);
     for (const name in envConf) {
         if (name in process.env) {
             let val: any = envConf[name];
