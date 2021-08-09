@@ -1,6 +1,6 @@
 {
     "name": "@uk/nest",
-    "version": "0.1.4",
+    "version": "0.1.8",
     "main": "dist/index",
     "types": "dist/index.d.ts",
     "author": "koloboid",
@@ -17,7 +17,8 @@
         "typescript": "^4.3.5"
     },
     "dependencies": {
-        "class-validator": "^0.13.1"
+        "class-validator": "^0.13.1",
+        "nestjs-mapped-types": "^1.0.1"
     },
     "browser": {
         "@nestjs/common": false,

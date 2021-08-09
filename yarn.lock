@@ -1315,6 +1315,7 @@ __metadata:
     class-validator: ^0.13.1
     eslint: ^7.32.0
     jest: ^27.0.6
+    nestjs-mapped-types: ^1.0.1
     npm-check-updates: ^11.8.3
     ts-jest: ^27.0.4
     typescript: ^4.3.5
@@ -5371,6 +5372,17 @@ __metadata:
   version: 2.6.2
   resolution: "neo-async@npm:2.6.2"
   checksum: deac9f8d00eda7b2e5cd1b2549e26e10a0faa70adaa6fdadca701cc55f49ee9018e427f424bac0c790b7c7e2d3068db97f3093f1093975f2acb8f8818b936ed9
+  languageName: node
+  linkType: hard
+
+"nestjs-mapped-types@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "nestjs-mapped-types@npm:1.0.1"
+  peerDependencies:
+    class-transformer: ^0.2.0 || ^0.3.0 || ^0.4.0
+    class-validator: ^0.11.1 || ^0.12.0 || ^0.13.0
+    reflect-metadata: ^0.1.12
+  checksum: f4a449f08dfb9e25ab1a919fd836d039c9ff6b6eb15fc6ebdabb90348bd26962691362e81ba6f6ef4fd75e8493facff0e1b58ee4d7c68201fddde9bad851ce4a
   languageName: node
   linkType: hard
 

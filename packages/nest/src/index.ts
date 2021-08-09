@@ -1,3 +1,2 @@
 export * from './fields';
-export { InputType, ObjectType, PartialType } from './shim-graphql';
-
+export { InputType, IntersectionType, ObjectType, OmitType, PartialType, PickType } from './shim-graphql';

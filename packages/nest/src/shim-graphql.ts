@@ -2,11 +2,19 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-const nest = require('@nestjs/graphql');
+import * as mappedTypes from 'nestjs-mapped-types';
 
-export function PartialType<T>(of: { new(): T }): { new(): Partial<T> } {
-    return nest.PartialType(of)
-}
+var nest;
+try {
+    nest = eval(`require('@nestjs/graphql')`);
+} catch {}
+
+nest = nest?.PartialType ? nest : mappedTypes;
+
+export const PartialType: typeof mappedTypes.PartialType = nest.PartialType;
+export const IntersectionType: typeof mappedTypes.IntersectionType = nest.IntersectionType;
+export const PickType: typeof mappedTypes.PickType = nest.PickType;
+export const OmitType: typeof mappedTypes.OmitType = nest.OmitType;
 
 //////////////////////////////////////////////////////////////////////
 
