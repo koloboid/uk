@@ -1,6 +1,6 @@
 {
     "name": "@uk/type",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "main": "dist/index",
     "types": "dist/index.d.ts",
     "author": "koloboid",
@@ -15,6 +15,7 @@
         "@types/uuid": "^8.3.1",
         "@typescript-eslint/eslint-plugin": "^4.29.0",
         "@typescript-eslint/parser": "^4.29.0",
+        "@uk/config": "workspace:packages/config",
         "eslint": "^7.32.0",
         "expect-type": "^0.12.0",
         "graphql": "^15.5.1",

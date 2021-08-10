@@ -6,4 +6,4 @@ yarn add -D npm-check-updates
 yarn ncu -u
 yarn
 
-echo -e "\e[92mUpgraded successfully"
+printf "\e[92mUpgraded successfully\n"

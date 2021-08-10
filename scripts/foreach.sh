@@ -15,9 +15,9 @@ fi
 for pkg in "${PACKAGES[@]}"
 do
     pushd packages/$pkg > /dev/null
-	echo -e "\e[93m========================================"
-    echo "Running $SCRIPT for @uk/$pkg"
-    echo -e "========================================\e[39m"
+	printf "\e[93m========================================\n"
+    printf "Running $SCRIPT for @uk/$pkg\n"
+    printf "========================================\e[39m\n"
     ../../scripts/$SCRIPT
     popd > /dev/null
 done

@@ -3,6 +3,6 @@
         "importHelpers": false,
         "noEmit": true
     },
-    "extends": "@uk/config/tsconfig/uk",
+    "extends": "@uk/config/uk/tsconfig",
     "includes": ["./**/*.ts"]
 }

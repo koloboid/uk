@@ -3,6 +3,6 @@
 set -e
 
 yarn add -D jest
-TZ=UTC yarn jest --no-cache --passWithNoTests || echo -e "\e[91mTests failed for @uk/`pwd`"
+TZ=UTC yarn jest --no-cache --passWithNoTests || printf "\e[91mTests failed for @uk/`pwd`\n"
 
-echo -e "\e[92mTested successfully"
+printf "\e[92mTested successfully\n"
