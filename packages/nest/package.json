@@ -1,6 +1,6 @@
 {
     "name": "@uk/nest",
-    "version": "0.1.8",
+    "version": "0.1.12",
     "main": "dist/index",
     "types": "dist/index.d.ts",
     "author": "koloboid",
@@ -10,9 +10,11 @@
     ],
     "devDependencies": {
         "@typescript-eslint/parser": "^4.29.0",
+        "class-transformer": "^0.4.0",
         "eslint": "^7.32.0",
         "jest": "^27.0.6",
         "npm-check-updates": "^11.8.3",
+        "reflect-metadata": "^0.1.13",
         "ts-jest": "^27.0.4",
         "typescript": "^4.3.5"
     },

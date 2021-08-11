@@ -6,6 +6,7 @@
         "build": "./scripts/foreach.sh build",
         "lint": "./scripts/foreach.sh lint",
         "test": "./scripts/foreach.sh test",
+        "release": "./scripts/foreach.sh release",
         "ncu": "./scripts/foreach.sh ncu"
     },
     "workspaces": [
