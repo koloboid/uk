@@ -1,6 +1,6 @@
 {
     "name": "@uk/log",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "main": "dist/index",
     "types": "dist/index.d.ts",
     "author": "koloboid",

@@ -1,7 +1,7 @@
 {
     "extends": "../cross/tsconfig.json",
     "compilerOptions": {
-        "target": "ES2020",
+        "target": "ES2019",
         "lib": ["ES2020"],
         "declaration": true,
         "sourceMap": true,

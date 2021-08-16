@@ -1,6 +1,6 @@
 {
     "name": "@uk/nest",
-    "version": "0.1.12",
+    "version": "0.2.4",
     "main": "dist/index",
     "types": "dist/index.d.ts",
     "author": "koloboid",
@@ -8,10 +8,15 @@
     "files": [
         "dist/**/*"
     ],
+    "scripts": {
+        "test": "cd .. && yarn test nest",
+        "build": "cd .. && yarn build nest"
+    },
     "devDependencies": {
         "@typescript-eslint/parser": "^4.29.0",
         "class-transformer": "^0.4.0",
         "eslint": "^7.32.0",
+        "expect-type": "^0.12.0",
         "jest": "^27.0.6",
         "npm-check-updates": "^11.8.3",
         "reflect-metadata": "^0.1.13",
@@ -19,6 +24,7 @@
         "typescript": "^4.3.5"
     },
     "dependencies": {
+        "@types/fs-capacitor": "^2.0.0",
         "class-validator": "^0.13.1",
         "nestjs-mapped-types": "^1.0.1"
     },

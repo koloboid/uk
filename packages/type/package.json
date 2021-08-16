@@ -5,6 +5,9 @@
     "types": "dist/index.d.ts",
     "author": "koloboid",
     "license": "MIT",
+    "scripts": {
+        "test": "cd .. && yarn test nest"
+    },
     "dependencies": {
         "bson-objectid": "^2.0.1",
         "uuid": "^8.3.2"

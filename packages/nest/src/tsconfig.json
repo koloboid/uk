@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "lib": ["es2019", "DOM"],
         "outDir": "../dist"
     },
     "extends": "@uk/config/uk/tsconfig",

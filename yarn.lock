@@ -939,6 +939,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/fs-capacitor@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@types/fs-capacitor@npm:2.0.0"
+  dependencies:
+    "@types/node": "*"
+  checksum: 367079834ddb8984e9b740d4219d01cfa9683e8552b1dfda473817e7f2b33d750453adda148d1b99cb67bd6e990fad8bd31e4034b5e9311dfb9803e6f1fbb0dc
+  languageName: node
+  linkType: hard
+
 "@types/graceful-fs@npm:^4.1.2":
   version: 4.1.5
   resolution: "@types/graceful-fs@npm:4.1.5"
@@ -1311,10 +1320,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@uk/nest@workspace:packages/nest"
   dependencies:
+    "@types/fs-capacitor": ^2.0.0
     "@typescript-eslint/parser": ^4.29.0
     class-transformer: ^0.4.0
     class-validator: ^0.13.1
     eslint: ^7.32.0
+    expect-type: ^0.12.0
     jest: ^27.0.6
     nestjs-mapped-types: ^1.0.1
     npm-check-updates: ^11.8.3

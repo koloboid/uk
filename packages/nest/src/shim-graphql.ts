@@ -4,17 +4,21 @@
 
 import * as mappedTypes from 'nestjs-mapped-types';
 
-var nest;
+var nestGraphql;
 try {
-    nest = eval(`require('@nestjs/graphql')`);
+    nestGraphql = eval(`require('@nestjs/graphql')`);
+} catch {}
+var graphqlUpload: any = {};
+try {
+    graphqlUpload = eval(`require('graphql-upload')`);
 } catch {}
 
-nest = nest?.PartialType ? nest : mappedTypes;
+nestGraphql = nestGraphql?.PartialType ? nestGraphql : mappedTypes;
 
-export const PartialType: typeof mappedTypes.PartialType = nest.PartialType;
-export const IntersectionType: typeof mappedTypes.IntersectionType = nest.IntersectionType;
-export const PickType: typeof mappedTypes.PickType = nest.PickType;
-export const OmitType: typeof mappedTypes.OmitType = nest.OmitType;
+export const PartialType: typeof mappedTypes.PartialType = nestGraphql.PartialType;
+export const IntersectionType: typeof mappedTypes.IntersectionType = nestGraphql.IntersectionType;
+export const PickType: typeof mappedTypes.PickType = nestGraphql.PickType;
+export const OmitType: typeof mappedTypes.OmitType = nestGraphql.OmitType;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -41,11 +45,13 @@ export interface InputType {
     (name: string, options?: InputTypeOptions): ClassDecorator;
 }
 
-export const InputType: InputType = nest.InputType ?? (() => () => {});
-export const ObjectType: ObjectType = nest.ObjectType ?? (() => () => {});
-export const Args: any = nest.Args ?? (() => () => {});
-export const Int: any = nest.Int ?? (() => () => {});
-export const ID: any = nest.ID ?? (() => () => {});
-export const NestField: any = nest.Field ?? (() => () => {});
-export const Float: any = nest.Float ?? (() => () => {});
-export const registerEnumType: any = nest.registerEnumType ?? (() => {});
+export const InputType: InputType = nestGraphql.InputType ?? (() => () => {});
+export const ObjectType: ObjectType = nestGraphql.ObjectType ?? (() => () => {});
+export const Args: any = nestGraphql.Args ?? (() => () => {});
+export const Int: any = nestGraphql.Int ?? (() => () => {});
+export const ID: any = nestGraphql.ID ?? (() => () => {});
+export const NestField: any = nestGraphql.Field ?? (() => () => {});
+export const Float: any = nestGraphql.Float ?? (() => () => {});
+export const registerEnumType: any = nestGraphql.registerEnumType ?? (() => {});
+
+export const GraphQLUpload = graphqlUpload.GraphQLUpload ?? (() => {});
