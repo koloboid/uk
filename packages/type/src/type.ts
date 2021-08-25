@@ -1,9 +1,9 @@
-import { A, C, N, O, U } from 'ts-toolbelt';
-import { Shape } from './shape';
 import ObjectID from 'bson-objectid';
+import { A, C, O, U } from 'ts-toolbelt';
+import * as uuid from 'uuid';
 import { Field as FieldClass } from './field';
 import PathLib from './path';
-import * as uuid from 'uuid';
+import { Shape } from './shape';
 
 const symShape = Symbol();
 const glob = globalThis;
@@ -519,32 +519,35 @@ export namespace type {
                 : 'ORDINARY'
         >;
 
-        export type Object<T extends object, M extends Mode, TMapKinds extends MapKind<T> = MapKind<T>> =
-            M extends 'init'
-                ? TMapKinds extends object
-                    ? Compute<
-                          {
-                              [P in O.SelectKeys<TMapKinds, 'ORDINARY'>]: Unbox<T[P], M>;
-                          } &
-                              {
-                                  [P in O.SelectKeys<TMapKinds, 'OPTIONAL'>]?: Unbox<T[P], M>;
-                              } &
-                              {
-                                  [P in O.SelectKeys<TMapKinds, 'HASDEFAULT'>]?: Unbox<T[P], M>;
-                              }
-                      >
-                    : 'ANY_NOT_SUPP'
-                : Compute<
+        export type Object<
+            T extends object,
+            M extends Mode,
+            TMapKinds extends MapKind<T> = MapKind<T>,
+        > = M extends 'init'
+            ? TMapKinds extends object
+                ? Compute<
                       {
-                          [P in keyof T]: Unbox<T[P], M>;
+                          [P in O.SelectKeys<TMapKinds, 'ORDINARY'>]: Unbox<T[P], M>;
                       } &
                           {
-                              +readonly [P in Extract<keyof T, Filter.FieldsByFlags<T, Field.Flags.READONLY>>]: Unbox<
-                                  T[P],
-                                  M
-                              >;
+                              [P in O.SelectKeys<TMapKinds, 'OPTIONAL'>]?: Unbox<T[P], M>;
+                          } &
+                          {
+                              [P in O.SelectKeys<TMapKinds, 'HASDEFAULT'>]?: Unbox<T[P], M>;
                           }
-                  >;
+                  >
+                : 'ANY_NOT_SUPP'
+            : Compute<
+                  {
+                      [P in keyof T]: Unbox<T[P], M>;
+                  } &
+                      {
+                          +readonly [P in Extract<keyof T, Filter.FieldsByFlags<T, Field.Flags.READONLY>>]: Unbox<
+                              T[P],
+                              M
+                          >;
+                      }
+              >;
 
         export type Fld<TField extends Field.Any, TMode extends Mode> = TField extends Field<
             infer TType,
@@ -721,80 +724,83 @@ function bigInt(min: bigint, max: bigint, name: string) {
     return `typeof $val !== 'bigint' || $val < ${min}n || $val > ${max}n ? $throw('${name} = ' + $val + 'n must be between ${min}n and ${max}n') : BigInt($val)`;
 }
 
-Shape.registerFieldCodegens(
-    type,
-    {
-        Int: ({ absName }) => int(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, absName),
-        Int8: ({ absName }) => int(-128, 127, absName),
-        Int16: ({ absName }) => int(-32768, 32767, absName),
-        Int32: ({ absName }) => int(-(2 ** 31), 2 ** 31 - 1, absName),
-        Int64: ({ absName }) => bigInt(-9223372036854775808n, 9223372036854775807n, absName),
+setTimeout(() => {
+    Shape.registerFieldCodegens(
+        type,
+        {
+            Int: ({ absName }) => int(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, absName),
+            Int8: ({ absName }) => int(-128, 127, absName),
+            Int16: ({ absName }) => int(-32768, 32767, absName),
+            Int32: ({ absName }) => int(-(2 ** 31), 2 ** 31 - 1, absName),
+            Int64: ({ absName }) => bigInt(-9223372036854775808n, 9223372036854775807n, absName),
 
-        UInt: ({ absName }) => int(0, Number.MAX_SAFE_INTEGER, absName),
-        UInt8: ({ absName }) => int(0, 0x100, absName),
-        UInt16: ({ absName }) => int(0, 0x1_0000, absName),
-        UInt32: ({ absName }) => int(0, 0x1_0000_0000, absName),
-        UInt64: ({ absName }) => bigInt(0n, 1_0000_0000_0000_0000n, absName),
+            UInt: ({ absName }) => int(0, Number.MAX_SAFE_INTEGER, absName),
+            UInt8: ({ absName }) => int(0, 0x100, absName),
+            UInt16: ({ absName }) => int(0, 0x1_0000, absName),
+            UInt32: ({ absName }) => int(0, 0x1_0000_0000, absName),
+            UInt64: ({ absName }) => bigInt(0n, 1_0000_0000_0000_0000n, absName),
 
-        String({ options, absName }) {
-            return options.maxSize
-                ? `$val.toString().length > ${options.maxSize} ? $throw('${absName} should be less than ${options.maxSize}.') : $val.toString()`
-                : `$val.toString()`;
+            String({ options, absName }) {
+                return options.maxSize
+                    ? `$val.toString().length > ${options.maxSize} ? $throw('${absName} should be less than ${options.maxSize}.') : $val.toString()`
+                    : `$val.toString()`;
+            },
+            Text: 'String',
+            BigInt() {
+                return 'BigInt($val)';
+            },
+            Float({ options, absName }) {
+                if (!options.allowInfinite)
+                    return `!isFinite(+$val) ? $throw('${absName} must be finite number') : +$val`;
+                return '+$val';
+            },
+            Boolean() {
+                return `!!$val`;
+            },
+            Date() {
+                return `$deps.createDate($val)`;
+            },
+            DateTime() {
+                return `new Date($val)`;
+            },
+            Blob({ options, absName }) {
+                const rv = options.maxSize
+                    ? `($val.byteLength > ${options.maxSize} ? $throw('${absName} should be less than ${options.maxSize} bytes. Requested size = ' + $val.byteLength) : $val)`
+                    : `$val`;
+                return `$val && ($val instanceof ArrayBuffer || ArrayBuffer.isView($val)) ? ${rv} : $throw('${absName} should be instance of ArrayBuffer or TypedArray')`;
+            },
+            UUID({ absName }) {
+                return `$deps.UUID.isValid($val) ? $val : $throw('${absName} should be valid UUID, "' + $val + '" is not')`;
+            },
+            MongoID() {
+                return `$deps.ObjectID($val)`;
+            },
+            One({ options, absName }) {
+                const refshape = type(options.ref);
+                const fk = refshape.fields.get(options.to);
+                if (!fk) throw new Error(`Foreign key for ${absName} => ${refshape.name}.${options.to} not found`);
+                return Shape['fieldCodegens'].codegens.get(fk!.factory)!(fk);
+            },
+            Many: undefined,
+            Array: undefined,
+            Hash: undefined,
+            Object: undefined,
+            Tuple: undefined,
+            Union: undefined,
+            Opt: undefined,
+            extract: undefined,
+            omit: undefined,
+            pick: undefined,
+            writeable: undefined,
         },
-        Text: 'String',
-        BigInt() {
-            return 'BigInt($val)';
+        {
+            ObjectID,
+            UUID: type.UUID,
+            createDate(from: any) {
+                const dt = new Date(from);
+                dt.setHours(0, 0, 0, 0);
+                return dt;
+            },
         },
-        Float({ options, absName }) {
-            if (!options.allowInfinite) return `!isFinite(+$val) ? $throw('${absName} must be finite number') : +$val`;
-            return '+$val';
-        },
-        Boolean() {
-            return `!!$val`;
-        },
-        Date() {
-            return `$deps.createDate($val)`;
-        },
-        DateTime() {
-            return `new Date($val)`;
-        },
-        Blob({ options, absName }) {
-            const rv = options.maxSize
-                ? `($val.byteLength > ${options.maxSize} ? $throw('${absName} should be less than ${options.maxSize} bytes. Requested size = ' + $val.byteLength) : $val)`
-                : `$val`;
-            return `$val && ($val instanceof ArrayBuffer || ArrayBuffer.isView($val)) ? ${rv} : $throw('${absName} should be instance of ArrayBuffer or TypedArray')`;
-        },
-        UUID({ absName }) {
-            return `$deps.UUID.isValid($val) ? $val : $throw('${absName} should be valid UUID, "' + $val + '" is not')`;
-        },
-        MongoID() {
-            return `$deps.ObjectID($val)`;
-        },
-        One({ options, absName }) {
-            const refshape = type(options.ref);
-            const fk = refshape.fields.get(options.to);
-            if (!fk) throw new Error(`Foreign key for ${absName} => ${refshape.name}.${options.to} not found`);
-            return Shape['fieldCodegens'].codegens.get(fk!.factory)!(fk);
-        },
-        Many: undefined,
-        Array: undefined,
-        Hash: undefined,
-        Object: undefined,
-        Tuple: undefined,
-        Union: undefined,
-        Opt: undefined,
-        extract: undefined,
-        omit: undefined,
-        pick: undefined,
-        writeable: undefined,
-    },
-    {
-        ObjectID,
-        UUID: type.UUID,
-        createDate(from: any) {
-            const dt = new Date(from);
-            dt.setHours(0, 0, 0, 0);
-            return dt;
-        },
-    },
-);
+    );
+}, 0);

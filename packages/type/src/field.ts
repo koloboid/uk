@@ -1,6 +1,6 @@
 import { O } from 'ts-toolbelt';
 import { Shape } from './shape';
-import { type } from './type';
+import type { type } from './type';
 
 export class Field<
     TType,
