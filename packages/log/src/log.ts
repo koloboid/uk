@@ -148,7 +148,9 @@ export class Log {
     }
 
     get catch() {
-        return this.error.bind(this);
+        return (err: Error | string | null | undefined) => {
+            if (err) this.error(err);
+        };
     }
 
     get hcf() {
