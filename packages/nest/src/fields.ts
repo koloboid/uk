@@ -1,6 +1,4 @@
-import { Exclude, Transform, Type } from 'class-transformer';
 import {
-    Allow,
     IsArray,
     IsBoolean,
     IsDate,
@@ -19,20 +17,69 @@ import {
     MinLength,
     ValidateNested,
 } from 'class-validator';
-import type { ReadStream } from 'fs-capacitor';
 import { C, L, U } from 'ts-toolbelt';
-import {
-    Args,
-    Float as GQLFloat,
-    GraphQLUpload,
-    ID as GQLID,
-    Int as GQLInt,
-    NestField,
-    registerEnumType,
-} from './shim-graphql';
+import { Args, Float as GQLFloat, ID as GQLID, Int as GQLInt, NestField, registerEnumType } from './shim-graphql';
 
 const SymFieldOpts = '__SymFieldOpts';
 const SymFieldEach = '__SymFieldEach';
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Field internals
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export type Field<TOpts extends Field.Opts = Field.Opts> = PropertyDecorator & {
+    [SymFieldOpts]: TOpts & Field.InternalOpts;
+};
+export namespace Field {
+    export type InternalOpts = {
+        gqlType?: any;
+        of?: Field;
+    };
+    export type Opts = { optional?: boolean; each?: boolean };
+
+    export function uniteDecorators<TOpts extends Opts, O = Exclude<TOpts, undefined>>(
+        opts: (TOpts & InternalOpts) | undefined,
+        gqlType: any,
+        decoratorsFactory: () => Array<PropertyDecorator | undefined>,
+    ): Exclude<TOpts, undefined>['each'] extends true ? Field<O> & { [SymFieldEach]: true } : Field<O> {
+        const options: TOpts & InternalOpts = (opts ?? {}) as TOpts;
+        const rv = ((target: any, propertyKey?: string | symbol) => {
+            const decorators = decoratorsFactory();
+            decorators.push(options.gqlType ?? NestField(() => gqlType, { nullable: !!options.optional }));
+            if (options.optional) {
+                decorators.push(IsOptional(options));
+            }
+            for (const decorator of decorators) {
+                propertyKey && decorator && decorator(target, propertyKey);
+            }
+        }) as any;
+        rv[SymFieldOpts] = {
+            ...options,
+            gqlType,
+        };
+        return rv;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MinMax helper
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export type MinMax = { min?: number; max?: number };
+export namespace MinMax {
+    export type FieldOpts = Field.Opts & MinMax;
+
+    export function decorators(
+        opts: string | MinMax | undefined,
+        minDecor: (val: number) => PropertyDecorator,
+        maxDecor: (val: number) => PropertyDecorator,
+    ) {
+        return opts && typeof opts === 'object'
+            ? [
+                  opts.min !== undefined && isFinite(opts.min) ? minDecor(opts.min) : undefined,
+                  opts.max !== undefined && isFinite(opts.max) ? maxDecor(opts.max) : undefined,
+              ]
+            : [];
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Enum factory
@@ -191,26 +238,6 @@ export const Array = array;
 export const List = array;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// FileUpload type
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class FileWithoutStream {
-    @Exclude()
-    _writeStream: any;
-}
-
-export function FileUpload<O extends Field.Opts>(opts?: O) {
-    return Field.uniteDecorators(opts, GraphQLUpload, () => [
-        Allow(),
-        Type(() => FileWithoutStream),
-        Transform(params => params.obj.photo),
-    ]);
-}
-export type FileUpload =
-    | File
-    | Blob
-    | Promise<{ filename: string; mimetype: string; encoding: string; createReadStream(): ReadStream }>;
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Arg type
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 export function Arg(type: C.Class): ReturnType<typeof Args>;
@@ -224,64 +251,4 @@ export function Arg(name: string | C.Class, field?: Field) {
         : Args({
               type: () => name,
           });
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Field internals
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type Field<TOpts extends Field.Opts = Field.Opts> = PropertyDecorator & {
-    [SymFieldOpts]: TOpts & Field.InternalOpts;
-};
-export namespace Field {
-    export type InternalOpts = {
-        gqlType?: any;
-        of?: Field;
-    };
-    export type Opts = { optional?: boolean; each?: boolean };
-
-    export function uniteDecorators<TOpts extends Opts, O = Exclude<TOpts, undefined>>(
-        opts: (TOpts & InternalOpts) | undefined,
-        gqlType: any,
-        decoratorsFactory: () => Array<PropertyDecorator | undefined>,
-    ): Exclude<TOpts, undefined>['each'] extends true ? Field<O> & { [SymFieldEach]: true } : Field<O> {
-        const options: TOpts & InternalOpts = (opts ?? {}) as TOpts;
-        const rv = ((target: any, propertyKey?: string | symbol) => {
-            const decorators = decoratorsFactory();
-            decorators.push(options.gqlType ?? NestField(() => gqlType, { nullable: !!options.optional }));
-            if (options.optional) {
-                decorators.push(IsOptional(options));
-            }
-            for (const decorator of decorators) {
-                propertyKey && decorator && decorator(target, propertyKey);
-            }
-        }) as any;
-        rv[SymFieldOpts] = {
-            ...options,
-            gqlType,
-        };
-        return rv;
-    }
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// MinMax helper
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export type MinMax = { min?: number; max?: number };
-export namespace MinMax {
-    export type FieldOpts = Field.Opts & MinMax;
-
-    export function decorators(
-        opts: string | MinMax | undefined,
-        minDecor: (val: number) => PropertyDecorator,
-        maxDecor: (val: number) => PropertyDecorator,
-    ) {
-        return opts && typeof opts === 'object'
-            ? [
-                  opts.min !== undefined && isFinite(opts.min) ? minDecor(opts.min) : undefined,
-                  opts.max !== undefined && isFinite(opts.max) ? maxDecor(opts.max) : undefined,
-              ]
-            : [];
-    }
 }
