@@ -1,3 +1,4 @@
+import { Expose } from 'class-transformer';
 import {
     IsArray,
     IsBoolean,
@@ -45,6 +46,7 @@ export namespace Field {
         const rv = ((target: any, propertyKey?: string | symbol) => {
             const decorators = decoratorsFactory();
             decorators.push(options.gqlType ?? NestField(() => gqlType, { nullable: !!options.optional }));
+            decorators.push(Expose());
             if (options.optional) {
                 decorators.push(IsOptional(options));
             }
